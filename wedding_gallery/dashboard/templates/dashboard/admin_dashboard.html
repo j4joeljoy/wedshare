@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="display-5 fw-bold mb-5" style="letter-spacing: 2px;">ADMIN DASHBOARD</h1>
+
+    <!-- Site Stats -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="glass-panel p-4 text-center">
+                <i class="bi bi-people fs-1 text-info mb-2"></i>
+                <h3 class="fw-bold">{{ stats.total_guests }}</h3>
+                <p class="text-white-50 mb-0">Total Guests</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-panel p-4 text-center">
+                <i class="bi bi-images fs-1 text-white-50 mb-2"></i>
+                <h3 class="fw-bold">{{ stats.total_photos }}</h3>
+                <p class="text-white-50 mb-0">Total Photos</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-panel p-4 text-center">
+                <i class="bi bi-eye fs-1 text-white-50 mb-2"></i>
+                <h3 class="fw-bold">{{ stats.total_views }}</h3>
+                <p class="text-white-50 mb-0">Total Views</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="glass-panel p-4 text-center">
+                <i class="bi bi-download fs-1 text-primary mb-2"></i>
+                <h3 class="fw-bold">{{ stats.total_downloads }}</h3>
+                <p class="text-white-50 mb-0">Total Downloads</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity & Guests -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="glass-panel h-100">
+                <div class="p-3 border-bottom border-secondary">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-person-plus me-2"></i>Recent Guests</h5>
+                </div>
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover bg-transparent mb-0"
+                            style="--bs-table-bg: transparent;">
+                            <thead>
+                                <tr>
+                                    <th class="text-white-50">Email</th>
+                                    <th class="text-white-50">Joined At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for guest in recent_guests %}
+                                <tr>
+                                    <td class="text-white">{{ guest.email }}</td>
+                                    <td class="text-white-50">{{ guest.created_at|date:"M d, H:i" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-white-50 text-center">No guests yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="glass-panel h-100">
+                <div class="p-3 border-bottom border-secondary">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-activity me-2"></i>Recent Activity</h5>
+                </div>
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-hover bg-transparent mb-0"
+                            style="--bs-table-bg: transparent;">
+                            <thead>
+                                <tr>
+                                    <th class="text-white-50">Page</th>
+                                    <th class="text-white-50">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for view in recent_activity %}
+                                <tr>
+                                    <td class="text-white">{{ view.page }}</td>
+                                    <td class="text-white-50">{{ view.viewed_at|date:"H:i:s" }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="2" class="text-white-50 text-center">No activity yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .glass-panel {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .glass-header {
+        background: rgba(30, 30, 30, 0.95);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.02);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 3px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
+
+<!-- Recent Downloads Row -->
+<div class="row g-4 mb-5 mt-4">
+    <div class="col-12">
+        <h4 class="mb-4 fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 1.1rem;"><i
+                class="bi bi-download me-2 text-success"></i>Recent Downloads</h4>
+        <div class="glass-panel p-0" style="height: 500px; overflow: hidden;">
+            <div class="table-responsive h-100 custom-scrollbar">
+                <table class="table table-hover mb-0 align-middle"
+                    style="--bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.05);">
+                    <thead class="sticky-top glass-header">
+                        <tr class="text-white-50 border-bottom border-secondary small text-uppercase">
+                            <th scope="col" class="ps-4 py-3">Name</th>
+                            <th scope="col" class="py-3">Email</th>
+                            <th scope="col" class="py-3">Photo</th>
+                            <th scope="col" class="pe-4 py-3 text-end">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-white border-0">
+                        {% for download in recent_downloads %}
+                        <tr>
+                            <td class="ps-4 py-3 fw-medium text-white">{{ download.user.name|default:"Guest" }}</td>
+                            <td class="py-3 text-white-50 small">{{ download.user.email }}</td>
+                            <td class="py-3 text-white">{{ download.photo.title|default:"Untitled"|truncatechars:30 }}
+                            </td>
+                            <td class="pe-4 py-3 text-end text-white-50 small">{{ download.downloaded_at|timesince }}
+                                ago</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-white-50 py-5">No downloads yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- All Photos Section -->
+<h4 class="mb-4 fw-bold mt-5"><i class="bi bi-images me-2"></i>ALL UPLOADED PHOTOS</h4>
+<div class="row g-4" data-masonry='{"percentPosition": true }'>
+    {% for photo in photos %}
+    <div class="col-sm-6 col-lg-3 mb-4">
+        <div class="glass-panel overflow-hidden position-relative group">
+            <img src="{{ photo.image_url }}" class="img-fluid w-100" alt="{{ photo.title }}">
+            <div class="p-3">
+                <h6 class="mb-1 text-truncate">{{ photo.title|default:"Untitled" }}</h6>
+                <p class="text-white-50 small mb-2">By {{ photo.uploaded_by.username }}</p>
+                <div class="d-flex justify-content-between text-white-50 small">
+                    <span>{{ photo.uploaded_at|date:"M d" }}</span>
+                    <div>
+                        <span class="me-2"><i class="bi bi-eye me-1"></i>{{ photo.views }}</span>
+                        <span><i class="bi bi-heart-fill me-1"></i>{{ photo.likes }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <p class="text-white-50">No photos uploaded yet.</p>
+    </div>
+    {% endfor %}
+</div>
+</div>
+
+
+<!-- Masonry JS -->
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D"
+    crossorigin="anonymous"></script>
+<!-- ImagesLoaded JS -->
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+
+<script>
+    // Initialize Masonry after all images have loaded
+    var grid = document.querySelector('.row[data-masonry]');
+    if (grid) {
+        imagesLoaded(grid, function () {
+            new Masonry(grid, {
+                percentPosition: true
+            });
+        });
+    }
+</script>
+{% endblock %}

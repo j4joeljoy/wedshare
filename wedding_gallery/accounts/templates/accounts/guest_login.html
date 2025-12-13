@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0 d-flex align-items-center justify-content-center"
+    style="min-height: 100vh; background-image: url('https://images.unsplash.com/photo-1519225468359-2996bc01c34c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
+
+    <div class="glass-panel p-5 text-center" style="max-width: 450px; width: 100%;">
+        <h2 class="mb-4 fw-bold" style="letter-spacing: 2px;">GUEST ACCESS</h2>
+        <p class="mb-4 text-white-50">Please enter your email to view the gallery.</p>
+
+        <form method="post" class="text-start">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="{{ form.email.id_for_label }}" class="form-label text-white-50">Email address</label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                {% endif %}
+            </div>
+            <div class="mb-4 form-check text-start">
+                {{ form.cookies_accepted }}
+                <label class="form-check-label text-white-50" for="{{ form.cookies_accepted.id_for_label }}">
+                    I accept the use of cookies
+                </label>
+            </div>
+            <button type="submit" class="btn btn-premium w-100 py-2 text-uppercase fw-bold">Enter Gallery</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

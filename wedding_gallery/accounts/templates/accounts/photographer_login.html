@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid p-0 d-flex align-items-center justify-content-center"
+    style="min-height: 100vh; background-image: url('https://images.unsplash.com/photo-1511285560982-1927bb5a61b9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center;">
+
+    <div class="glass-panel p-5 text-center" style="max-width: 450px; width: 100%;">
+        <div class="mb-4">
+            <i class="bi bi-camera-fill fs-1 text-white"></i>
+        </div>
+        <h2 class="mb-4 fw-bold" style="letter-spacing: 2px;">PHOTOGRAPHER</h2>
+        <p class="mb-4 text-white-50">Login to manage the gallery</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3 text-start">
+                <label class="form-label text-white-50 small text-uppercase">Username</label>
+                {{ form.username }}
+            </div>
+            <div class="mb-4 text-start">
+                <label class="form-label text-white-50 small text-uppercase">Password</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-premium w-100 py-2 text-uppercase fw-bold">Login</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Custom style for Django auth form fields if they don't have classes */
+    input[type="text"],
+    input[type="password"] {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        color: white !important;
+        border-radius: 8px;
+        padding: 10px;
+        width: 100%;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        background: rgba(255, 255, 255, 0.2) !important;
+        outline: none;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+</style>
+{% endblock %}

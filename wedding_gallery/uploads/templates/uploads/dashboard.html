@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="display-5 fw-bold mb-0" style="letter-spacing: 2px;">DASHBOARD</h1>
+            <p class="text-white-50">Welcome back, {{ request.user.username }}</p>
+        </div>
+        <a href="{% url 'uploads:upload_photo' %}" class="btn btn-premium rounded-pill px-4">
+            <i class="bi bi-cloud-upload me-2"></i>Upload New Photo
+        </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-4 mb-5 row-cols-1 row-cols-md-5">
+        <div class="col">
+            <div class="glass-panel p-4 text-center h-100">
+                <i class="bi bi-images fs-1 text-white-50 mb-2"></i>
+                <h3 class="fw-bold">{{ stats.total_photos }}</h3>
+                <p class="text-white-50 mb-0">Total Photos</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="glass-panel p-4 text-center h-100">
+                <i class="bi bi-eye fs-1 text-white-50 mb-2"></i>
+                <h3 class="fw-bold">{{ stats.views }}</h3>
+                <p class="text-white-50 mb-0">Total Views</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="glass-panel p-4 text-center h-100">
+                <i class="bi bi-heart fs-1 text-danger mb-2"></i>
+                <h3 class="fw-bold">{{ stats.likes }}</h3>
+                <p class="text-white-50 mb-0">Total Likes</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="glass-panel p-4 text-center h-100">
+                <i class="bi bi-chat-dots fs-1 text-info mb-2"></i>
+                <h3 class="fw-bold">{{ stats.comments }}</h3>
+                <p class="text-white-50 mb-0">Total Comments</p>
+            </div>
+        </div>
+        <div class="col">
+            <div class="glass-panel p-4 text-center h-100">
+                <i class="bi bi-download fs-1 text-primary mb-2"></i>
+                <h3 class="fw-bold">{{ stats.downloads }}</h3>
+                <p class="text-white-50 mb-0">Downloads</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download History -->
+    <h4 class="mb-4 fw-bold"><i class="bi bi-clock-history me-2"></i>DOWNLOAD HISTORY</h4>
+    <div class="glass-panel p-4 mb-5">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0"
+                style="--bs-table-bg: transparent; --bs-table-hover-bg: rgba(255,255,255,0.05);">
+                <thead>
+                    <tr class="text-white-50 border-bottom border-secondary">
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Time</th>
+                    </tr>
+                </thead>
+                <tbody class="text-white">
+                    {% for download in recent_downloads %}
+                    <tr>
+                        <td class="text-white">{{ download.user.name|default:"Guest" }}</td>
+                        <td class="text-white-50">{{ download.user.email }}</td>
+                        <td class="text-white">{{ download.photo.title|default:"Untitled" }}</td>
+                        <td class="text-white-50">{{ download.downloaded_at|timesince }} ago</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-white-50 py-4">No downloads yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Uploaded Photos -->
+    <h4 class="mb-4 fw-bold"><i class="bi bi-images me-2"></i>YOUR UPLOADS</h4>
+    <div class="row g-4" data-masonry='{"percentPosition": true }'>
+        {% for photo in photos %}
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="glass-panel overflow-hidden position-relative group">
+                <img src="{{ photo.image_url }}" class="img-fluid w-100" alt="{{ photo.title }}">
+                <div class="p-3">
+                    <h5 class="mb-1 text-truncate">{{ photo.title|default:"Untitled" }}</h5>
+                    <div class="d-flex justify-content-between text-white-50 small">
+                        <span>{{ photo.uploaded_at|date:"M d, Y" }}</span>
+                        <div>
+                            <span class="me-2"><i class="bi bi-eye me-1"></i>{{ photo.views.count }}</span>
+                            <span><i class="bi bi-heart-fill me-1"></i>{{ photo.likes.count }}</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2 mt-2">
+                        <a href="{% url 'gallery:photo_detail' photo.id %}"
+                            class="btn btn-sm btn-outline-light border-0">
+                            <i class="bi bi-chat-dots"></i> View Comments
+                        </a>
+                        <form action="{% url 'uploads:delete_photo' photo.id %}" method="post"
+                            onsubmit="return confirm('Are you sure you want to delete this photo?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger border-0">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-white-50">You haven't uploaded any photos yet.</p>
+            <a href="{% url 'uploads:upload_photo' %}" class="btn btn-premium mt-3">Upload First Photo</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Masonry JS -->
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+    async></script>
+{% endblock %}

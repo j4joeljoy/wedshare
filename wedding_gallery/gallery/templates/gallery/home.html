@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="display-4 fw-bold mb-0" style="letter-spacing: 2px;">GALLERY</h1>
+            <p class="text-white-50">Captured moments from our special day</p>
+        </div>
+        <a href="{% url 'gallery:download_all' %}" class="btn btn-premium rounded-pill px-4">
+            <i class="bi bi-download me-2"></i>Download All
+        </a>
+    </div>
+
+    <div class="row g-4" data-masonry='{"percentPosition": true }'>
+        {% for photo in photos %}
+        <div class="col-sm-6 col-lg-4 mb-4">
+            <div class="glass-panel overflow-hidden position-relative group">
+                <a href="{% url 'gallery:photo_detail' photo.id %}">
+                    <img src="{{ photo.image_url }}" class="img-fluid w-100" alt="{{ photo.title }}"
+                        style="transition: transform 0.5s ease;">
+                </a>
+                <div class="p-3">
+                    <h6 class="mb-1 text-truncate">{{ photo.title|default:"Untitled" }}</h6>
+                    <div class="d-flex justify-content-between text-white-50 small mt-2">
+                        <span><i class="bi bi-eye me-1"></i>{{ photo.views }}</span>
+                        <span><i class="bi bi-heart-fill me-1"></i>{{ photo.likes }}</span>
+                        <span><i class="bi bi-download me-1"></i>{{ photo.downloads }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-white-50">No photos uploaded yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Masonry JS -->
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+    integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D"
+    crossorigin="anonymous"></script>
+<!-- ImagesLoaded JS -->
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+
+<script>
+    // Initialize Masonry after all images have loaded
+    var grid = document.querySelector('.row[data-masonry]');
+    if (grid) {
+        imagesLoaded(grid, function () {
+            new Masonry(grid, {
+                percentPosition: true
+            });
+        });
+    }
+</script>
+{% endblock %}
