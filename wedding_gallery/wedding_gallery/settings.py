@@ -26,7 +26,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-k3m#kvs*u46es9use5z$9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = ['*']
+if os.environ.get('RAILWAY_STATIC_URL'):
+    ALLOWED_HOSTS = [os.environ.get('RAILWAY_STATIC_URL'), '127.0.0.1', 'localhost']
+    CSRF_TRUSTED_ORIGINS = ['https://' + os.environ.get('RAILWAY_STATIC_URL')]
+
 
 
 # Application definition
@@ -85,6 +89,15 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+import dj_database_url
+if 'DATABASE_URL' in os.environ:
+    DATABASES['default'] = dj_database_url.config(
+        default='postgres://...',
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+
 
 
 # Password validation
