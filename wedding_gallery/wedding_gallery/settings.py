@@ -27,9 +27,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-k3m#kvs*u46es9use5z$9
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ['https://wedshare-gules.vercel.app']
+
 if os.environ.get('RAILWAY_STATIC_URL'):
     ALLOWED_HOSTS = [os.environ.get('RAILWAY_STATIC_URL'), '127.0.0.1', 'localhost']
-    CSRF_TRUSTED_ORIGINS = ['https://' + os.environ.get('RAILWAY_STATIC_URL')]
+    CSRF_TRUSTED_ORIGINS.append('https://' + os.environ.get('RAILWAY_STATIC_URL'))
 
 
 
