@@ -12,12 +12,12 @@
         </a>
     </div>
 
-    <div class="row g-4" data-masonry='{"percentPosition": true }'>
+    <div class="row g-4" id="masonry-grid">
         {% for photo in photos %}
-        <div class="col-sm-6 col-lg-4 mb-4">
-            <div class="glass-panel overflow-hidden position-relative group">
+        <div class="col-sm-6 col-md-4 col-lg-3 grid-item">
+            <div class="glass-panel overflow-hidden position-relative group mb-4">
                 <a href="{% url 'gallery:photo_detail' photo.id %}">
-                    <img src="{{ photo.image_url }}" class="img-fluid w-100" alt="{{ photo.title }}"
+                    <img src="{{ photo.image_url }}" class="img-fluid w-100 rounded-top" alt="{{ photo.title }}"
                         style="transition: transform 0.5s ease;">
                 </a>
                 <div class="p-3">
@@ -46,14 +46,16 @@
 <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 
 <script>
-    // Initialize Masonry after all images have loaded
-    var grid = document.querySelector('.row[data-masonry]');
-    if (grid) {
-        imagesLoaded(grid, function () {
-            new Masonry(grid, {
-                percentPosition: true
+    document.addEventListener('DOMContentLoaded', function () {
+        var grid = document.querySelector('#masonry-grid');
+        if (grid) {
+            imagesLoaded(grid, function () {
+                new Masonry(grid, {
+                    itemSelector: '.grid-item',
+                    percentPosition: true
+                });
             });
-        });
-    }
+        }
+    });
 </script>
 {% endblock %}

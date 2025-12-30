@@ -11,32 +11,39 @@ def upload_photo(request):
     if request.method == "POST":
         form = PhotoUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            photo = form.save(commit=False)
-            photo.uploaded_by = request.user
+            files = request.FILES.getlist('image_file')
+            uploaded_count = 0
             
-            # Upload to Cloudinary with folder and watermark
-            image_file = request.FILES['image_file']
-            try:
-                result = cloudinary.uploader.upload(
-                    image_file,
-                    folder="wedding_gallery",
-                    transformation=[
-                        {
-                            'overlay': 'text:Arial_30:Wedding Memories',
-                            'gravity': 'south_east',
-                            'opacity': 50,
-                            'color': 'white'
-                        }
-                    ]
-                )
-                photo.image_url = result['secure_url']
-                photo.save()
-                messages.success(request, "Photo uploaded successfully!")
-                return redirect('uploads:dashboard')
-            except Exception as e:
-                # Handle upload error
-                print(f"Upload error: {e}")
-                messages.error(request, f"Upload failed: {e}")
+            for f in files:
+                try:
+                    # Upload to Cloudinary with folder and watermark
+                    result = cloudinary.uploader.upload(
+                        f,
+                        folder="wedding_gallery",
+                        transformation=[
+                            {
+                                'overlay': 'text:Arial_30:Wedding Memories',
+                                'gravity': 'south_east',
+                                'opacity': 50,
+                                'color': 'white'
+                            }
+                        ]
+                    )
+                    
+                    # Create Photo object
+                    Photo.objects.create(
+                        title=form.cleaned_data['title'] or f.name,
+                        image_url=result['secure_url'],
+                        uploaded_by=request.user
+                    )
+                    uploaded_count += 1
+                except Exception as e:
+                    print(f"Upload error for {f.name}: {e}")
+                    messages.error(request, f"Failed to upload {f.name}: {e}")
+            
+            if uploaded_count > 0:
+                messages.success(request, f"{uploaded_count} photos uploaded successfully!")
+            return redirect('uploads:dashboard')
     else:
         form = PhotoUploadForm()
 
