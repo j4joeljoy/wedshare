@@ -8,4 +8,4 @@ cmds = ["pip install -r requirements.txt"]
 cmds = ["cd wedding_gallery && python manage.py collectstatic --no-input", "cd wedding_gallery && python manage.py migrate"]
 
 [start]
-cmd = "cd wedding_gallery && gunicorn wedding_gallery.wsgi"
+cmd = "gunicorn --chdir wedding_gallery wedding_gallery.wsgi:application"

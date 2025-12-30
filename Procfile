@@ -1,1 +1,1 @@
-web: cd wedding_gallery && gunicorn wedding_gallery.wsgi:application
+web: gunicorn --chdir wedding_gallery wedding_gallery.wsgi:application

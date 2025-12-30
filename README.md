@@ -57,7 +57,7 @@ A Django-based wedding photo sharing and gallery application.
 3.  **Connect your repository**.
 4.  Render should detect `render.yaml` automatically. If not:
     - **Build Command**: `pip install -r requirements.txt && python wedding_gallery/manage.py collectstatic --no-input && python wedding_gallery/manage.py migrate`
-    - **Start Command**: `cd wedding_gallery && gunicorn wedding_gallery.wsgi:application`
+    - **Start Command**: `gunicorn --chdir wedding_gallery wedding_gallery.wsgi:application`
 5.  **Environment Variables**:
     - Add `CLOUDINARY_...` variables.
     - Add `DATABASE_URL` (Create a Render PostgreSQL database and link it).
