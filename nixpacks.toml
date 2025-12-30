@@ -2,7 +2,7 @@
 nixPkgs = ["python312", "postgresql"]
 
 [phases.install]
-cmds = ["cd wedding_gallery && pip install -r requirements.txt"]
+cmds = ["pip install -r requirements.txt"]
 
 [phases.build]
 cmds = ["cd wedding_gallery && python manage.py collectstatic --no-input", "cd wedding_gallery && python manage.py migrate"]

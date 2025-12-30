@@ -50,6 +50,18 @@ A Django-based wedding photo sharing and gallery application.
     python manage.py runserver
     ```
 
+## Deployment (Render)
+
+1.  **Push to GitHub**.
+2.  **Create a New Web Service** on Render.
+3.  **Connect your repository**.
+4.  Render should detect `render.yaml` automatically. If not:
+    - **Build Command**: `pip install -r requirements.txt && python wedding_gallery/manage.py collectstatic --no-input && python wedding_gallery/manage.py migrate`
+    - **Start Command**: `cd wedding_gallery && gunicorn wedding_gallery.wsgi:application`
+5.  **Environment Variables**:
+    - Add `CLOUDINARY_...` variables.
+    - Add `DATABASE_URL` (Create a Render PostgreSQL database and link it).
+
 ## Deployment (Railway)
 
 This project is configured for seamless deployment on [Railway.app](https://railway.app/).
